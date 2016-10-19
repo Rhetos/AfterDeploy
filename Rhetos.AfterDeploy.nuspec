@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Rhetos.AfterDeploy</id>
+    <version>1.0.1-dev</version>
+    <authors>Omega software</authors>
+    <owners>Omega software</owners>
+    <licenseUrl>http://opensource.org/licenses/AGPL-3.0</licenseUrl>
+    <projectUrl>https://github.com/rhetos/rhetos</projectUrl>
+    <description>AfterDeploy is a plugin for Rhetos development platform. It enables other plugin to execute SQL scripts on each depoyment.</description>
+    <copyright>Copyright Omega software 2016</copyright>
+    <tags>Rhetos plugin</tags>
+    <dependencies>
+      <dependency id="Rhetos" version="1.0.0" />
+      <dependency id="Rhetos.CommonConcepts" version="1.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Readme.md" target="" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.pdb" target="lib\net451" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.dll" target="lib\net451" />
+  </files>
+</package>
