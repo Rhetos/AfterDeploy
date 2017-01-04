@@ -37,12 +37,14 @@ namespace Rhetos.AfterDeploy
         private readonly IInstalledPackages _installedPackages;
         private readonly ISqlExecuter _sqlExecuter;
         private readonly ILogger _logger;
+        private readonly ILogger _deployPackagesLogger;
 
         public ExecuteSqlAfterDeploy(IInstalledPackages installedPackages, ISqlExecuter sqlExecuter, ILogProvider logProvider)
         {
             _installedPackages = installedPackages;
             _sqlExecuter = sqlExecuter;
             _logger = logProvider.GetLogger("AfterDeploy");
+            _deployPackagesLogger = logProvider.GetLogger("DeployPackages");
         }
 
         public IEnumerable<string> Dependencies
@@ -61,14 +63,17 @@ namespace Rhetos.AfterDeploy
         {
             // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
             var scripts = _installedPackages.Packages
-                .SelectMany(p => GetScripts(p));
+                .SelectMany(p => GetScripts(p))
+                .ToList();
 
             foreach (var script in scripts)
             {
-                _logger.Info("Executing script " + script.Package.Id + ": " + script.Name);
+                _logger.Trace("Executing script " + script.Package.Id + ": " + script.Name);
                 string sql = File.ReadAllText(script.Path, Encoding.Default);
                 _sqlExecuter.ExecuteSql(sql);
             }
+
+            _deployPackagesLogger.Trace("Executed " + scripts.Count + " after-deploy scripts.");
         }
 
         class Script
