@@ -70,7 +70,10 @@ namespace Rhetos.AfterDeploy
             {
                 _logger.Trace("Executing script " + script.Package.Id + ": " + script.Name);
                 string sql = File.ReadAllText(script.Path, Encoding.Default);
-                _sqlExecuter.ExecuteSql(sql);
+
+                var sqlBatches = SqlTransactionBatch.GroupByTransaction(SqlUtility.SplitBatches(sql));
+                foreach (var sqlBatch in sqlBatches)
+                    _sqlExecuter.ExecuteSql(sqlBatch, sqlBatch.UseTransacion);
             }
 
             _deployPackagesLogger.Trace("Executed " + scripts.Count + " after-deploy scripts.");
@@ -83,7 +86,9 @@ namespace Rhetos.AfterDeploy
             public string Name;
         }
 
-        /// <summary>Returns after-deploy scripts, ordered by natural sort of file paths inside each package.</summary>
+        /// <summary>
+        /// Returns after-deploy scripts, ordered by natural sort of file paths inside each package.
+        /// </summary>
         private List<Script> GetScripts(InstalledPackage package)
         {
             string afterDeployFolder = Path.GetFullPath(Path.Combine(package.Folder, "AfterDeploy"));
