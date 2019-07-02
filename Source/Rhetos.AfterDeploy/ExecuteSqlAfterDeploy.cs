@@ -69,7 +69,7 @@ namespace Rhetos.AfterDeploy
             foreach (var script in scripts)
             {
                 _logger.Trace("Executing script " + script.Package.Id + ": " + script.Name);
-                string sql = File.ReadAllText(script.Path, Encoding.Default);
+                string sql = File.ReadAllText(script.Path, Encoding.UTF8);
 
                 var sqlBatches = SqlTransactionBatch.GroupByTransaction(SqlUtility.SplitBatches(sql));
                 foreach (var sqlBatch in sqlBatches)
