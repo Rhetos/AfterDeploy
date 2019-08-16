@@ -63,7 +63,7 @@ namespace Rhetos.AfterDeploy
         {
             // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
             var scripts = _installedPackages.Packages
-                .SelectMany(p => GetScripts(p))
+                .SelectMany(GetScripts)
                 .ToList();
 
             foreach (var script in scripts)
@@ -91,33 +91,23 @@ namespace Rhetos.AfterDeploy
         /// </summary>
         private List<Script> GetScripts(InstalledPackage package)
         {
-            string afterDeployFolder = Path.GetFullPath(Path.Combine(package.Folder, "AfterDeploy"));
-            if (!Directory.Exists(afterDeployFolder))
-                return new List<Script> { };
+            const string afterDeployFolderPrefix = @"AfterDeploy\";
 
-            var files = Directory.GetFiles(afterDeployFolder, "*.*", SearchOption.AllDirectories)
-                .OrderBy(path => CsUtility.GetNaturalSortString(path).Replace(@"\", @" \"));
+            var files = package.ContentFiles.Where(file => file.InPackagePath.StartsWith(afterDeployFolderPrefix, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(file => CsUtility.GetNaturalSortString(file.InPackagePath).Replace(@"\", @" \"));
 
             const string expectedExtension = ".sql";
-            var badFile = files.FirstOrDefault(file => Path.GetExtension(file).ToLower() != expectedExtension);
+            var badFile = files.FirstOrDefault(file => !string.Equals(Path.GetExtension(file.InPackagePath), expectedExtension, StringComparison.OrdinalIgnoreCase));
             if (badFile != null)
-                throw new FrameworkException("After-deploy script '" + badFile + "' does not have the expected extension '" + expectedExtension + "'.");
+                throw new FrameworkException("After-deploy script '" + badFile.PhysicalPath + "' does not have expected extension '" + expectedExtension + "'.");
 
-            return files.Select(path => new Script
+            return files.Select(file => new Script
                 {
                     Package = package,
-                    Path = path,
-                    Name = GetSimpleName(path, afterDeployFolder)
+                    Path = file.PhysicalPath,
+                    Name = file.InPackagePath.Substring(afterDeployFolderPrefix.Length)
                 })
                 .ToList();
-        }
-
-        private string GetSimpleName(string path, string folder)
-        {
-            string name = path.Substring(folder.Length);
-            if (name.StartsWith(@"\"))
-                name = name.Substring(1);
-            return name;
         }
     }
 }
