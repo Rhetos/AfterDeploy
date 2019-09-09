@@ -11,12 +11,12 @@
     <copyright>Copyright Omega software 2016</copyright>
     <tags>Rhetos plugin</tags>
     <dependencies>
-      <dependency id="Rhetos" version="1.5.0" />
-      <dependency id="Rhetos.CommonConcepts" version="1.5.0" />
+      <dependency id="Rhetos" version="2.12.0" />
     </dependencies>
   </metadata>
   <files>
     <file src="Readme.md" target="" />
+    <file src="ChangeLog.md" target="" />
     <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.pdb" target="lib\net451" />
     <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.dll" target="lib\net451" />
   </files>
