@@ -53,6 +53,8 @@ namespace Rhetos.AfterDeploy
             {
                 return new[]
                 {
+                    // These dependencies allow CommonConcepts and AspNetFormsAuth plugins to generate standard security claims and roles,
+                    // before executing AfterDeploy script, so that the scripts could be used for generating built-in permission.
                     "Rhetos.Dom.DefaultConcepts.ClaimGenerator",
                     "Rhetos.AspNetFormsAuth.AuthenticationDatabaseInitializer"
                 };
