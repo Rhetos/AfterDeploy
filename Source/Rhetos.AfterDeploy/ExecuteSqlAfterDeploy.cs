@@ -35,14 +35,14 @@ namespace Rhetos.AfterDeploy
     public class ExecuteSqlAfterDeploy : IServerInitializer
     {
         private readonly IInstalledPackages _installedPackages;
-        private readonly ISqlExecuter _sqlExecuter;
+        private readonly SqlTransactionBatches _sqlTransactionBatches;
         private readonly ILogger _logger;
         private readonly ILogger _deployPackagesLogger;
 
-        public ExecuteSqlAfterDeploy(IInstalledPackages installedPackages, ISqlExecuter sqlExecuter, ILogProvider logProvider)
+        public ExecuteSqlAfterDeploy(IInstalledPackages installedPackages, SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider)
         {
             _installedPackages = installedPackages;
-            _sqlExecuter = sqlExecuter;
+            _sqlTransactionBatches = sqlTransactionBatches;
             _logger = logProvider.GetLogger("AfterDeploy");
             _deployPackagesLogger = logProvider.GetLogger("DeployPackages");
         }
@@ -62,50 +62,36 @@ namespace Rhetos.AfterDeploy
         public void Initialize()
         {
             // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
-            var scripts = _installedPackages.Packages
-                .SelectMany(GetScripts)
-                .ToList();
-
+            var scripts = _installedPackages.Packages.SelectMany(GetScripts).ToList();
             foreach (var script in scripts)
-            {
-                _logger.Trace("Executing script " + script.Package.Id + ": " + script.Name);
-                string sql = File.ReadAllText(script.Path, Encoding.UTF8);
+                _logger.Trace(() => "Script " + script.Name);
 
-                var sqlBatches = SqlTransactionBatch.GroupByTransaction(SqlUtility.SplitBatches(sql));
-                foreach (var sqlBatch in sqlBatches)
-                    _sqlExecuter.ExecuteSql(sqlBatch, sqlBatch.UseTransacion);
-            }
-
-            _deployPackagesLogger.Trace("Executed " + scripts.Count + " after-deploy scripts.");
-        }
-
-        class Script
-        {
-            public InstalledPackage Package;
-            public string Path;
-            public string Name;
+            _sqlTransactionBatches.Execute(scripts);
+            _deployPackagesLogger.Trace($"Executed {scripts.Count} after-deploy scripts.");
         }
 
         /// <summary>
         /// Returns after-deploy scripts, ordered by natural sort of file paths inside each package.
         /// </summary>
-        private List<Script> GetScripts(InstalledPackage package)
+        private List<SqlTransactionBatches.SqlScript> GetScripts(InstalledPackage package)
         {
             const string afterDeployFolderPrefix = @"AfterDeploy\";
 
             var files = package.ContentFiles.Where(file => file.InPackagePath.StartsWith(afterDeployFolderPrefix, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(file => CsUtility.GetNaturalSortString(file.InPackagePath).Replace(@"\", @" \"));
+                .OrderBy(file => CsUtility.GetNaturalSortString(file.InPackagePath).Replace(@"\", @" \"))
+                .ToList();
 
             const string expectedExtension = ".sql";
             var badFile = files.FirstOrDefault(file => !string.Equals(Path.GetExtension(file.InPackagePath), expectedExtension, StringComparison.OrdinalIgnoreCase));
             if (badFile != null)
                 throw new FrameworkException("After-deploy script '" + badFile.PhysicalPath + "' does not have expected extension '" + expectedExtension + "'.");
 
-            return files.Select(file => new Script
+            return files
+                .Select(file => new SqlTransactionBatches.SqlScript
                 {
-                    Package = package,
-                    Path = file.PhysicalPath,
-                    Name = file.InPackagePath.Substring(afterDeployFolderPrefix.Length)
+                    Name = package.Id + ": " + file.InPackagePath.Substring(afterDeployFolderPrefix.Length),
+                    Sql = File.ReadAllText(file.PhysicalPath, Encoding.UTF8),
+                    IsBatch = true,
                 })
                 .ToList();
         }
