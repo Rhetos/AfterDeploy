@@ -20,7 +20,6 @@
 using Newtonsoft.Json;
 using Rhetos.Logging;
 using Rhetos.Utilities;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -33,8 +32,6 @@ namespace Rhetos.AfterDeploy
 
         private readonly ILogger _performanceLogger;
         private readonly AssetsOptions _assetsOptions;
-
-        public IEnumerable<string> Dependencies => new List<string>();
 
         public AfterDeployScriptsProvider(ILogProvider logProvider, AssetsOptions assetsOptions)
         {
@@ -51,19 +48,19 @@ namespace Rhetos.AfterDeploy
             var stopwatch = Stopwatch.StartNew();
             var afterDeployScriptsFilePath = Path.Combine(_assetsOptions.AssetsFolder, AfterDeployScriptsFileName);
             if (!File.Exists(afterDeployScriptsFilePath))
-                throw new FrameworkException($@"The file {afterDeployScriptsFilePath} that is used to execute the data migration is missing. Please check that the build has completed successfully before updating the database.");
+                throw new FrameworkException($@"The file {afterDeployScriptsFilePath} that is used to execute the after deploy scripts is missing. Please check that the build has completed successfully before updating the database.");
             var serializedConcepts = File.ReadAllText(afterDeployScriptsFilePath, Encoding.UTF8);
             var dataMigrationScripts = JsonConvert.DeserializeObject<AfterDeployScripts>(serializedConcepts);
-            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Loaded {dataMigrationScripts.Scripts.Count} scripts from generated file.");
+            _performanceLogger.Write(stopwatch, $@"{nameof(AfterDeployScriptsProvider)}: Loaded {dataMigrationScripts.Scripts.Count} scripts from generated file.");
             return dataMigrationScripts;
         }
 
         public void Save(AfterDeployScripts dataMigrationScripts)
         {
             var stopwatch = Stopwatch.StartNew();
-            string serializedMigrationScripts = JsonConvert.SerializeObject(dataMigrationScripts, Formatting.Indented);
-            File.WriteAllText(Path.Combine(_assetsOptions.AssetsFolder, AfterDeployScriptsFileName), serializedMigrationScripts, Encoding.UTF8);
-            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Saved {dataMigrationScripts.Scripts.Count} scripts to generated file.");
+            string serializedAfterDeployScripts = JsonConvert.SerializeObject(dataMigrationScripts, Formatting.Indented);
+            File.WriteAllText(Path.Combine(_assetsOptions.AssetsFolder, AfterDeployScriptsFileName), serializedAfterDeployScripts, Encoding.UTF8);
+            _performanceLogger.Write(stopwatch, $@"{nameof(AfterDeployScriptsProvider)}: Saved {dataMigrationScripts.Scripts.Count} scripts to generated file.");
         }
     }
 }
