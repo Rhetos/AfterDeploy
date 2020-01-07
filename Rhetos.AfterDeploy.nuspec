@@ -17,7 +17,7 @@
   <files>
     <file src="Readme.md" target="" />
     <file src="ChangeLog.md" target="" />
-    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.pdb" target="lib\net451" />
-    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.dll" target="lib\net451" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.pdb" target="lib\net472" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.dll" target="lib\net472" />
   </files>
 </package>
