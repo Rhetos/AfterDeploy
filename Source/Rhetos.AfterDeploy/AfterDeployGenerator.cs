@@ -34,12 +34,12 @@ namespace Rhetos.AfterDeploy
     public class AfterDeployGenerator : IGenerator
     {
         private readonly IInstalledPackages _installedPackages;
-        private readonly ILogProvider _logProvider;
+        private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
-        public AfterDeployGenerator(IInstalledPackages installedPackages, ILogProvider logProvider)
+        public AfterDeployGenerator(IInstalledPackages installedPackages, ILogProvider logProvider, AssetsOptions assetOptions)
         {
             _installedPackages = installedPackages;
-            _logProvider = logProvider;
+            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, assetOptions);
         }
 
         public IEnumerable<string> Dependencies { get { return Enumerable.Empty<string>(); } }
@@ -48,7 +48,7 @@ namespace Rhetos.AfterDeploy
         {
             // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
             var scripts = _installedPackages.Packages.SelectMany(GetScripts).ToList();
-            new AfterDeployScriptsProvider(_logProvider).Save(new AfterDeployScripts { Scripts = scripts });
+            _afterDeployScriptsProvider.Save(new AfterDeployScripts { Scripts = scripts });
         }
 
         /// <summary>

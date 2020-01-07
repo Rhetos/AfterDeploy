@@ -32,12 +32,14 @@ namespace Rhetos.AfterDeploy
         const string AfterDeployScriptsFileName = "AfterDeployScripts.json";
 
         private readonly ILogger _performanceLogger;
+        private readonly AssetsOptions _assetsOptions;
 
         public IEnumerable<string> Dependencies => new List<string>();
 
-        public AfterDeployScriptsProvider(ILogProvider logProvider)
+        public AfterDeployScriptsProvider(ILogProvider logProvider, AssetsOptions assetsOptions)
         {
             _performanceLogger = logProvider.GetLogger("Performance");
+            _assetsOptions = assetsOptions;
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace Rhetos.AfterDeploy
         public AfterDeployScripts Load()
         {
             var stopwatch = Stopwatch.StartNew();
-            var afterDeployScriptsFilePath = Path.Combine(Paths.GeneratedFolder, AfterDeployScriptsFileName);
+            var afterDeployScriptsFilePath = Path.Combine(_assetsOptions.AssetsFolder, AfterDeployScriptsFileName);
             if (!File.Exists(afterDeployScriptsFilePath))
                 throw new FrameworkException($@"The file {afterDeployScriptsFilePath} that is used to execute the data migration is missing. Please check that the build has completed successfully before updating the database.");
             var serializedConcepts = File.ReadAllText(afterDeployScriptsFilePath, Encoding.UTF8);
@@ -60,7 +62,7 @@ namespace Rhetos.AfterDeploy
         {
             var stopwatch = Stopwatch.StartNew();
             string serializedMigrationScripts = JsonConvert.SerializeObject(dataMigrationScripts, Formatting.Indented);
-            File.WriteAllText(Path.Combine(Paths.GeneratedFolder, AfterDeployScriptsFileName), serializedMigrationScripts, Encoding.UTF8);
+            File.WriteAllText(Path.Combine(_assetsOptions.AssetsFolder, AfterDeployScriptsFileName), serializedMigrationScripts, Encoding.UTF8);
             _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Saved {dataMigrationScripts.Scripts.Count} scripts to generated file.");
         }
     }

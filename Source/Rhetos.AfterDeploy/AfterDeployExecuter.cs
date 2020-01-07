@@ -30,16 +30,16 @@ namespace Rhetos.AfterDeploy
     public class AfterDeployExecuter : IServerInitializer
     {
         private readonly SqlTransactionBatches _sqlTransactionBatches;
-        private readonly ILogProvider _logProvider;
         private readonly ILogger _logger;
         private readonly ILogger _deployPackagesLogger;
+        private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
-        public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider)
+        public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, AssetsOptions assetOptions)
         {
             _sqlTransactionBatches = sqlTransactionBatches;
-            _logProvider = logProvider;
             _logger = logProvider.GetLogger("AfterDeploy");
             _deployPackagesLogger = logProvider.GetLogger("DeployPackages");
+            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, assetOptions);
         }
 
         public IEnumerable<string> Dependencies
@@ -59,7 +59,7 @@ namespace Rhetos.AfterDeploy
         public void Initialize()
         {
             // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
-            var scripts = new AfterDeployScriptsProvider(_logProvider).Load().Scripts
+            var scripts = _afterDeployScriptsProvider.Load().Scripts
                 .Select(x => new SqlTransactionBatches.SqlScript { Name = x.Name, Sql = x.Script, IsBatch = true})
                 .ToList();
             foreach (var script in scripts)
