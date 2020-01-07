@@ -27,55 +27,34 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Rhetos.AfterDeploy
 {
-    [Export(typeof(IServerInitializer))]
-    public class ExecuteSqlAfterDeploy : IServerInitializer
+    [Export(typeof(IGenerator))]
+    public class AfterDeployGenerator : IGenerator
     {
         private readonly IInstalledPackages _installedPackages;
-        private readonly SqlTransactionBatches _sqlTransactionBatches;
-        private readonly ILogger _logger;
-        private readonly ILogger _deployPackagesLogger;
+        private readonly ILogProvider _logProvider;
 
-        public ExecuteSqlAfterDeploy(IInstalledPackages installedPackages, SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider)
+        public AfterDeployGenerator(IInstalledPackages installedPackages, ILogProvider logProvider)
         {
             _installedPackages = installedPackages;
-            _sqlTransactionBatches = sqlTransactionBatches;
-            _logger = logProvider.GetLogger("AfterDeploy");
-            _deployPackagesLogger = logProvider.GetLogger("DeployPackages");
+            _logProvider = logProvider;
         }
 
-        public IEnumerable<string> Dependencies
-        {
-            get
-            {
-                return new[]
-                {
-                    // These dependencies allow CommonConcepts and AspNetFormsAuth plugins to generate standard security claims and roles,
-                    // before executing AfterDeploy script, so that the scripts could be used for generating built-in permission.
-                    "Rhetos.Dom.DefaultConcepts.ClaimGenerator",
-                    "Rhetos.AspNetFormsAuth.AuthenticationDatabaseInitializer"
-                };
-            }
-        }
+        public IEnumerable<string> Dependencies { get { return Enumerable.Empty<string>(); } }
 
-        public void Initialize()
+        public void Generate()
         {
             // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
             var scripts = _installedPackages.Packages.SelectMany(GetScripts).ToList();
-            foreach (var script in scripts)
-                _logger.Trace(() => "Script " + script.Name);
-
-            _sqlTransactionBatches.Execute(scripts);
-            _deployPackagesLogger.Trace($"Executed {scripts.Count} after-deploy scripts.");
+            new AfterDeployScriptsProvider(_logProvider).Save(new AfterDeployScripts { Scripts = scripts });
         }
 
         /// <summary>
         /// Returns after-deploy scripts, ordered by natural sort of file paths inside each package.
         /// </summary>
-        private List<SqlTransactionBatches.SqlScript> GetScripts(InstalledPackage package)
+        private List<AfterDeployScript> GetScripts(InstalledPackage package)
         {
             const string afterDeployFolderPrefix = @"AfterDeploy\";
 
@@ -89,11 +68,10 @@ namespace Rhetos.AfterDeploy
                 throw new FrameworkException("After-deploy script '" + badFile.PhysicalPath + "' does not have expected extension '" + expectedExtension + "'.");
 
             return files
-                .Select(file => new SqlTransactionBatches.SqlScript
+                .Select(file => new AfterDeployScript
                 {
                     Name = package.Id + ": " + file.InPackagePath.Substring(afterDeployFolderPrefix.Length),
-                    Sql = File.ReadAllText(file.PhysicalPath, Encoding.UTF8),
-                    IsBatch = true,
+                    Script = File.ReadAllText(file.PhysicalPath, Encoding.UTF8)
                 })
                 .ToList();
         }
