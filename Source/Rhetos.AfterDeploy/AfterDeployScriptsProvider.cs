@@ -38,6 +38,8 @@ namespace Rhetos.AfterDeploy
             _performanceLogger = logProvider.GetLogger("Performance");
         }
 
+        private string AfterDeployScriptsFilePath => Path.Combine(Paths.GeneratedFolder, AfterDeployScriptsFileName);
+
         /// <summary>
         /// The scripts are sorted by the intended execution order,
         /// respecting package dependencies and natural sort order by path.
@@ -45,21 +47,20 @@ namespace Rhetos.AfterDeploy
         public AfterDeployScripts Load()
         {
             var stopwatch = Stopwatch.StartNew();
-            var afterDeployScriptsFilePath = Path.Combine(Paths.GeneratedFolder, AfterDeployScriptsFileName);
-            if (!File.Exists(afterDeployScriptsFilePath))
-                throw new FrameworkException($@"The file {afterDeployScriptsFilePath} that is used to execute the after deploy scripts is missing. Please check that the build has completed successfully before updating the database.");
-            var serializedConcepts = File.ReadAllText(afterDeployScriptsFilePath, Encoding.UTF8);
-            var dataMigrationScripts = JsonConvert.DeserializeObject<AfterDeployScripts>(serializedConcepts);
-            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Loaded {dataMigrationScripts.Scripts.Count} scripts from generated file.");
-            return dataMigrationScripts;
+            if (!File.Exists(AfterDeployScriptsFilePath))
+                throw new FrameworkException($@"The file {AfterDeployScriptsFilePath} that is used to execute the after deploy scripts is missing. Please check that the build has completed successfully before updating the database.");
+            var serializedConcepts = File.ReadAllText(AfterDeployScriptsFilePath, Encoding.UTF8);
+            var afterDeployScripts = JsonConvert.DeserializeObject<AfterDeployScripts>(serializedConcepts);
+            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Loaded {afterDeployScripts.Scripts.Count} scripts from generated file.");
+            return afterDeployScripts;
         }
 
-        public void Save(AfterDeployScripts dataMigrationScripts)
+        public void Save(AfterDeployScripts afterDeployScripts)
         {
             var stopwatch = Stopwatch.StartNew();
-            string serializedAfterDeployScripts = JsonConvert.SerializeObject(dataMigrationScripts, Formatting.Indented);
-            File.WriteAllText(Path.Combine(Paths.GeneratedFolder, AfterDeployScriptsFileName), serializedAfterDeployScripts, Encoding.UTF8);
-            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Saved {dataMigrationScripts.Scripts.Count} scripts to generated file.");
+            string serializedAfterDeployScripts = JsonConvert.SerializeObject(afterDeployScripts, Formatting.Indented);
+            File.WriteAllText(AfterDeployScriptsFilePath, serializedAfterDeployScripts, Encoding.UTF8);
+            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Saved {afterDeployScripts.Scripts.Count} scripts to generated file.");
         }
     }
 }
