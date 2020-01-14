@@ -33,10 +33,10 @@ namespace Rhetos.AfterDeploy
     [Export(typeof(IGenerator))]
     public class AfterDeployGenerator : IGenerator
     {
-        private readonly IInstalledPackages _installedPackages;
+        private readonly InstalledPackages _installedPackages;
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
-        public AfterDeployGenerator(IInstalledPackages installedPackages, ILogProvider logProvider, AssetsOptions assetOptions)
+        public AfterDeployGenerator(InstalledPackages installedPackages, ILogProvider logProvider, AssetsOptions assetOptions)
         {
             _installedPackages = installedPackages;
             _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, assetOptions);
