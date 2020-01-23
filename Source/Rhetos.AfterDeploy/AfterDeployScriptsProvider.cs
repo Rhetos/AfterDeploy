@@ -32,15 +32,15 @@ namespace Rhetos.AfterDeploy
         const string AfterDeployScriptsFileName = "AfterDeployScripts.json";
 
         private readonly ILogger _performanceLogger;
-        private readonly AssetsOptions _assetsOptions;
+        private readonly RhetosAppEnvironment _rhetosAppEnvironment;
 
-        public AfterDeployScriptsProvider(ILogProvider logProvider, AssetsOptions assetsOptions)
+        public AfterDeployScriptsProvider(ILogProvider logProvider, RhetosAppEnvironment rhetosAppEnvironment)
         {
             _performanceLogger = logProvider.GetLogger("Performance");
-            _assetsOptions = assetsOptions;
+            _rhetosAppEnvironment = rhetosAppEnvironment;
         }
 
-        private string AfterDeployScriptsFilePath => Path.Combine(_assetsOptions.AssetsFolder, AfterDeployScriptsFileName);
+        private string AfterDeployScriptsFilePath => Path.Combine(_rhetosAppEnvironment.AssetsFolder, AfterDeployScriptsFileName);
 
         /// <summary>
         /// The scripts are sorted by the intended execution order,

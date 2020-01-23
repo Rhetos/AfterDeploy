@@ -34,12 +34,12 @@ namespace Rhetos.AfterDeploy
         private readonly ILogger _deployPackagesLogger;
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
-        public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, AssetsOptions assetOptions)
+        public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, RhetosAppEnvironment rhetosAppEnvironment)
         {
             _sqlTransactionBatches = sqlTransactionBatches;
             _logger = logProvider.GetLogger("AfterDeploy");
             _deployPackagesLogger = logProvider.GetLogger("DeployPackages");
-            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, assetOptions);
+            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, rhetosAppEnvironment);
         }
 
         public IEnumerable<string> Dependencies
