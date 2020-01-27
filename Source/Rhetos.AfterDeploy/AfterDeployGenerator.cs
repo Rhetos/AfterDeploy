@@ -36,10 +36,10 @@ namespace Rhetos.AfterDeploy
         private readonly InstalledPackages _installedPackages;
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
-        public AfterDeployGenerator(InstalledPackages installedPackages, ILogProvider logProvider, AssetsOptions assetOptions)
+        public AfterDeployGenerator(InstalledPackages installedPackages, ILogProvider logProvider, RhetosAppEnvironment rhetosAppEnvironment)
         {
             _installedPackages = installedPackages;
-            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, assetOptions);
+            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, rhetosAppEnvironment);
         }
 
         public IEnumerable<string> Dependencies { get { return Enumerable.Empty<string>(); } }
