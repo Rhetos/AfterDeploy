@@ -58,7 +58,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Rhetos">
+    <PackageReference Include="Rhetos.Core">
       <Version>4.0.0-dev*</Version>
     </PackageReference>
   </ItemGroup>
