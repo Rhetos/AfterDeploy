@@ -31,14 +31,12 @@ namespace Rhetos.AfterDeploy
     {
         private readonly SqlTransactionBatches _sqlTransactionBatches;
         private readonly ILogger _logger;
-        private readonly ILogger _deployPackagesLogger;
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
         public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, RhetosAppEnvironment rhetosAppEnvironment)
         {
             _sqlTransactionBatches = sqlTransactionBatches;
             _logger = logProvider.GetLogger("AfterDeploy");
-            _deployPackagesLogger = logProvider.GetLogger("DeployPackages");
             _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, rhetosAppEnvironment);
         }
 
@@ -58,15 +56,15 @@ namespace Rhetos.AfterDeploy
 
         public void Initialize()
         {
-            // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
+            // The packages are sorted by their dependencies, so the SQL scripts will be executed in the same order.
             var scripts = _afterDeployScriptsProvider.Load().Scripts
                 .Select(x => new SqlTransactionBatches.SqlScript { Name = x.Name, Sql = x.Script, IsBatch = true})
                 .ToList();
             foreach (var script in scripts)
-                _logger.Trace(() => "Script " + script.Name);
+                _logger.Trace(() => $"Script {script.Name}");
 
             _sqlTransactionBatches.Execute(scripts);
-            _deployPackagesLogger.Trace($"Executed {scripts.Count} after-deploy scripts.");
+            _logger.Info($"Executed {scripts.Count} after-deploy scripts.");
         }
     }
 }
