@@ -1,0 +1,5 @@
+<Project>
+    <ItemGroup>
+        <RhetosBuild Include="AfterDeploy\**\*" />
+    </ItemGroup>
+</Project>
