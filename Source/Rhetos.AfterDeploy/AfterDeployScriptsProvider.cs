@@ -32,15 +32,13 @@ namespace Rhetos.AfterDeploy
         const string AfterDeployScriptsFileName = "AfterDeployScripts.json";
 
         private readonly ILogger _performanceLogger;
-        private readonly RhetosAppEnvironment _rhetosAppEnvironment;
+        private readonly string _afterDeployScriptsFilePath;
 
-        public AfterDeployScriptsProvider(ILogProvider logProvider, RhetosAppEnvironment rhetosAppEnvironment)
+        public AfterDeployScriptsProvider(ILogProvider logProvider, IRhetosEnvironment rhetosEnvironment)
         {
             _performanceLogger = logProvider.GetLogger("Performance");
-            _rhetosAppEnvironment = rhetosAppEnvironment;
+            _afterDeployScriptsFilePath = Path.Combine(rhetosEnvironment.AssetsFolder, AfterDeployScriptsFileName);
         }
-
-        private string AfterDeployScriptsFilePath => Path.Combine(_rhetosAppEnvironment.AssetsFolder, AfterDeployScriptsFileName);
 
         /// <summary>
         /// The scripts are sorted by the intended execution order,
@@ -49,9 +47,9 @@ namespace Rhetos.AfterDeploy
         public AfterDeployScripts Load()
         {
             var stopwatch = Stopwatch.StartNew();
-            if (!File.Exists(AfterDeployScriptsFilePath))
-                throw new FrameworkException($@"The file {AfterDeployScriptsFilePath} that is used to execute the after deploy scripts is missing. Please check that the build has completed successfully before updating the database.");
-            var serializedConcepts = File.ReadAllText(AfterDeployScriptsFilePath, Encoding.UTF8);
+            if (!File.Exists(_afterDeployScriptsFilePath))
+                throw new FrameworkException($@"The file {_afterDeployScriptsFilePath} that is used to execute the after deploy scripts is missing. Please check that the build has completed successfully before updating the database.");
+            var serializedConcepts = File.ReadAllText(_afterDeployScriptsFilePath, Encoding.UTF8);
             var afterDeployScripts = JsonConvert.DeserializeObject<AfterDeployScripts>(serializedConcepts);
             _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Loaded {afterDeployScripts.Scripts.Count} scripts from generated file.");
             return afterDeployScripts;
@@ -61,7 +59,7 @@ namespace Rhetos.AfterDeploy
         {
             var stopwatch = Stopwatch.StartNew();
             string serializedAfterDeployScripts = JsonConvert.SerializeObject(afterDeployScripts, Formatting.Indented);
-            File.WriteAllText(AfterDeployScriptsFilePath, serializedAfterDeployScripts, Encoding.UTF8);
+            File.WriteAllText(_afterDeployScriptsFilePath, serializedAfterDeployScripts, Encoding.UTF8);
             _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Saved {afterDeployScripts.Scripts.Count} scripts to generated file.");
         }
     }
