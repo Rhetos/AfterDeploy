@@ -34,10 +34,10 @@ namespace Rhetos.AfterDeploy
         private readonly ILogger _performanceLogger;
         private readonly string _afterDeployScriptsFilePath;
 
-        public AfterDeployScriptsProvider(ILogProvider logProvider, IRhetosEnvironment rhetosEnvironment)
+        public AfterDeployScriptsProvider(ILogProvider logProvider, IAssetsOptions assetsOptions)
         {
             _performanceLogger = logProvider.GetLogger("Performance");
-            _afterDeployScriptsFilePath = Path.Combine(rhetosEnvironment.AssetsFolder, AfterDeployScriptsFileName);
+            _afterDeployScriptsFilePath = Path.Combine(assetsOptions.AssetsFolder, AfterDeployScriptsFileName);
         }
 
         /// <summary>
