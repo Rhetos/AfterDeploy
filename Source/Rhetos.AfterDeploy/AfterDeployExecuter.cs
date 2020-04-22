@@ -33,11 +33,11 @@ namespace Rhetos.AfterDeploy
         private readonly ILogger _logger;
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
-        public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, RhetosAppEnvironment rhetosAppEnvironment)
+        public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, IAssetsOptions assetsOptions)
         {
             _sqlTransactionBatches = sqlTransactionBatches;
             _logger = logProvider.GetLogger("AfterDeploy");
-            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, rhetosAppEnvironment);
+            _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, assetsOptions);
         }
 
         public IEnumerable<string> Dependencies
