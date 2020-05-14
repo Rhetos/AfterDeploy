@@ -1,5 +1,9 @@
 # AfterDeploy release notes
 
+## 2.0.0 (2020-05-14)
+
+* Support for Rhetos 4.0 build proces: Separated building database model and updating database.
+
 ## 1.2.0 (2019-09-09)
 
 ### Internal improvements

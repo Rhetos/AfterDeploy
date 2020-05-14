@@ -11,7 +11,7 @@
     <copyright>Copyright Omega software 2016</copyright>
     <tags>Rhetos plugin</tags>
     <dependencies>
-      <dependency id="Rhetos" version="4.0.0-dev" />
+      <dependency id="Rhetos" version="4.0.0" />
     </dependencies>
   </metadata>
   <files>
