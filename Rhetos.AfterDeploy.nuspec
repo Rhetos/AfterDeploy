@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Rhetos.AfterDeploy</id>
-    <version>2.0.0-dev</version>
+    <version>5.0.0-dev</version>
     <authors>Omega software</authors>
     <owners>Omega software</owners>
     <licenseUrl>http://opensource.org/licenses/AGPL-3.0</licenseUrl>
@@ -11,14 +11,14 @@
     <copyright>Copyright Omega software 2016</copyright>
     <tags>Rhetos plugin</tags>
     <dependencies>
-      <dependency id="Rhetos" version="4.0.0-dev" />
+      <dependency id="Rhetos" version="5.0.0-dev" />
     </dependencies>
   </metadata>
   <files>
     <file src="Readme.md" target="" />
     <file src="ChangeLog.md" target="" />
-    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.pdb" target="lib\net472" />
-    <file src="Source\Rhetos.AfterDeploy\bin\Debug\Rhetos.AfterDeploy.dll" target="lib\net472" />
-    <file src="Source\Rhetos.AfterDeploy.props" target="build" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\net5.0\Rhetos.AfterDeploy.pdb" target="lib\net5.0" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\net5.0\Rhetos.AfterDeploy.dll" target="lib\net5.0" />
+    <file src="Source\Rhetos.AfterDeploy.targets" target="build" />
   </files>
 </package>

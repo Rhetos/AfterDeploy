@@ -58,7 +58,7 @@ namespace Rhetos.AfterDeploy
         {
             // The packages are sorted by their dependencies, so the SQL scripts will be executed in the same order.
             var scripts = _afterDeployScriptsProvider.Load().Scripts
-                .Select(x => new SqlTransactionBatches.SqlScript { Name = x.Name, Sql = x.Script, IsBatch = true})
+                .Select(x => new SqlBatchScript { Name = x.Name, Sql = x.Script, IsBatch = true})
                 .ToList();
             foreach (var script in scripts)
                 _logger.Trace(() => $"Script {script.Name}");
