@@ -46,7 +46,7 @@ namespace Rhetos.AfterDeploy
 
         public void Generate()
         {
-            // The packages are sorted by their dependencies, so the sql scripts will be executed in the same order.
+            // The packages are sorted by their dependencies, so the SQL scripts will be executed in the same order.
             var scripts = _installedPackages.Packages.SelectMany(GetScripts).ToList();
             _afterDeployScriptsProvider.Save(new AfterDeployScripts { Scripts = scripts });
         }
@@ -56,10 +56,10 @@ namespace Rhetos.AfterDeploy
         /// </summary>
         private List<AfterDeployScript> GetScripts(InstalledPackage package)
         {
-            const string afterDeployFolderPrefix = @"AfterDeploy\";
+            string afterDeployFolderPrefix = "AfterDeploy" + Path.DirectorySeparatorChar;
 
             var files = package.ContentFiles.Where(file => file.InPackagePath.StartsWith(afterDeployFolderPrefix, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(file => CsUtility.GetNaturalSortString(file.InPackagePath).Replace(@"\", @" \"))
+                .OrderBy(file => CsUtility.GetNaturalSortString(file.InPackagePath).Replace(@"\", @" \").Replace(@"/", @" /"))
                 .ToList();
 
             const string expectedExtension = ".sql";
