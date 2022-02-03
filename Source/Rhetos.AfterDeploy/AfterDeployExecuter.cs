@@ -29,11 +29,11 @@ namespace Rhetos.AfterDeploy
     [Export(typeof(IServerInitializer))]
     public class AfterDeployExecuter : IServerInitializer
     {
-        private readonly SqlTransactionBatches _sqlTransactionBatches;
+        private readonly ISqlTransactionBatches _sqlTransactionBatches;
         private readonly ILogger _logger;
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
 
-        public AfterDeployExecuter(SqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, IAssetsOptions assetsOptions)
+        public AfterDeployExecuter(ISqlTransactionBatches sqlTransactionBatches, ILogProvider logProvider, IAssetsOptions assetsOptions)
         {
             _sqlTransactionBatches = sqlTransactionBatches;
             _logger = logProvider.GetLogger("AfterDeploy");

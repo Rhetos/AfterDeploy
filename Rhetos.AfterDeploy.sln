@@ -5,10 +5,11 @@ VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhetos.AfterDeploy", "Source\Rhetos.AfterDeploy\Rhetos.AfterDeploy.csproj", "{8B146382-6C0E-4953-BB53-0414E7453E14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "test\TestApp\TestApp.csproj", "{875CF3B2-DE40-49D5-A734-0FA6FDC2E986}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "test\TestApp\TestApp.csproj", "{875CF3B2-DE40-49D5-A734-0FA6FDC2E986}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{43DAED5F-0F10-4CF2-B3D6-8753B0A780B9}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		Build.bat = Build.bat
 		ChangeLog.md = ChangeLog.md
@@ -17,7 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 		Rhetos.AfterDeploy.nuspec = Rhetos.AfterDeploy.nuspec
 		Source\Rhetos.AfterDeploy.targets = Source\Rhetos.AfterDeploy.targets
+		Test.bat = Test.bat
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhetos.AfterDeploy.Test", "Test\Rhetos.AfterDeploy.Test\Rhetos.AfterDeploy.Test.csproj", "{E709FB72-7088-4615-8019-EAD4AC083301}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,10 @@ Global
 		{875CF3B2-DE40-49D5-A734-0FA6FDC2E986}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{875CF3B2-DE40-49D5-A734-0FA6FDC2E986}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{875CF3B2-DE40-49D5-A734-0FA6FDC2E986}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E709FB72-7088-4615-8019-EAD4AC083301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E709FB72-7088-4615-8019-EAD4AC083301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E709FB72-7088-4615-8019-EAD4AC083301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E709FB72-7088-4615-8019-EAD4AC083301}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

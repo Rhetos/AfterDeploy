@@ -1,0 +1,5 @@
+IF OBJECT_ID('dbo.B') IS NOT NULL
+    EXEC ('DROP VIEW B');
+
+IF OBJECT_ID('dbo.A') IS NOT NULL
+    EXEC ('DROP VIEW A');
