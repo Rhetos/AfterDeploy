@@ -2,17 +2,22 @@ SETLOCAL
 SET Version=5.0.0
 SET Prerelease=auto
 
-REM Updating the build version.
-PowerShell -ExecutionPolicy ByPass .\ChangeVersion.ps1 %Version% %Prerelease% || GOTO Error0
+@SET Config=%1%
+@IF [%1] == [] SET Config=Debug
 
-dotnet build "Rhetos.AfterDeploy.sln" /p:Configuration=Debug /verbosity:minimal /fileLogger || GOTO Error0
-WHERE /Q NuGet.exe || ECHO ERROR: Please download the NuGet.exe command line tool. && GOTO Error0
-IF NOT EXIST Install\ MD Install
+REM Updating the build version.
+PowerShell -ExecutionPolicy ByPass .\tools\Build\ChangeVersion.ps1 %Version% %Prerelease% || GOTO Error0
+
+dotnet build --configuration %Config% -p:RhetosDeploy=false || GOTO Error0
+
+IF NOT EXIST Install MD Install
 DEL /F /S /Q Install\* || GOTO Error0
+
+WHERE /Q NuGet.exe || ECHO ERROR: Please download the NuGet.exe command line tool. && GOTO Error0
 NuGet pack -OutputDirectory Install || GOTO Error0
 
 REM Updating the build version back to "dev" (internal development build), to avoid spamming git history with timestamped prerelease versions.
-PowerShell -ExecutionPolicy ByPass .\ChangeVersion.ps1 %Version% dev || GOTO Error0
+PowerShell -ExecutionPolicy ByPass .\tools\Build\ChangeVersion.ps1 %Version% dev || GOTO Error0
 
 @REM ================================================
 
@@ -21,7 +26,7 @@ PowerShell -ExecutionPolicy ByPass .\ChangeVersion.ps1 %Version% dev || GOTO Err
 @EXIT /B 0
 
 :Error0
-@PowerShell -ExecutionPolicy ByPass .\ChangeVersion.ps1 %Version% dev >nul
+@PowerShell -ExecutionPolicy ByPass .\tools\Build\ChangeVersion.ps1 %Version% dev >nul
 @ECHO.
 @ECHO %~nx0 FAILED.
 @IF /I [%1] NEQ [/NOPAUSE] @PAUSE
