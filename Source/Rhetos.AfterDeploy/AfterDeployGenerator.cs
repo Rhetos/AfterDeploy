@@ -35,11 +35,13 @@ namespace Rhetos.AfterDeploy
     {
         private readonly InstalledPackages _installedPackages;
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
+        private readonly FilesUtility _filesUtility;
 
-        public AfterDeployGenerator(InstalledPackages installedPackages, ILogProvider logProvider, RhetosBuildEnvironment rhetosBuildEnvironment)
+        public AfterDeployGenerator(InstalledPackages installedPackages, ILogProvider logProvider, RhetosBuildEnvironment rhetosBuildEnvironment, FilesUtility filesUtility)
         {
             _installedPackages = installedPackages;
             _afterDeployScriptsProvider = new AfterDeployScriptsProvider(logProvider, rhetosBuildEnvironment);
+            _filesUtility = filesUtility;
         }
 
         public IEnumerable<string> Dependencies { get { return Enumerable.Empty<string>(); } }
@@ -71,7 +73,7 @@ namespace Rhetos.AfterDeploy
                 .Select(file => new AfterDeployScript
                 {
                     Name = package.Id + ": " + file.InPackagePath.Substring(afterDeployFolderPrefix.Length),
-                    Script = File.ReadAllText(file.PhysicalPath, Encoding.UTF8)
+                    Script = _filesUtility.ReadAllText(file.PhysicalPath)
                 })
                 .ToList();
         }
