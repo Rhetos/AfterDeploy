@@ -25,21 +25,25 @@ It simplifies the handling of SQL scripts that need to be executed on each deplo
 * **Hard-coded data** tables should be initialized in data-migration scripts. These records could be modified with new versions of the applications. More importantly, these records are usually referenced from other tables, so the data-migrations scripts for the other tables might need the hard-coded data already inserted into the database.
 * DataMigration scripts are executed at the beginning of the deployment process, **before** the database structure is upgraded.
 
-## Build
+## Installation and configuration
 
-**Note:** This package is already available at the [NuGet.org](https://www.nuget.org/) online gallery.
-You don't need to build it from source in order to use it in your application.
+Installing this package to a Rhetos application:
 
-To build the package from source, run `Build.bat`.
-The script will pause in case of an error.
-The build output is a NuGet package in the "Install" subfolder.
+1. Add 'Rhetos.AfterDeploy' NuGet package, available at the [NuGet.org](https://www.nuget.org/) on-line gallery.
 
-## Installation
+## How to contribute
 
-To install this package to a Rhetos server, add it to the Rhetos server's *RhetosPackages.config* file
-and make sure the NuGet package location is listed in the *RhetosPackageSources.config* file.
+Contributions are very welcome. The easiest way is to fork this repo, and then
+make a pull request from your fork. The first time you make a pull request, you
+may be asked to sign a Contributor Agreement.
+For more info see [How to Contribute](https://github.com/Rhetos/Rhetos/wiki/How-to-Contribute) on Rhetos wiki.
 
-* The package ID is "**Rhetos.AfterDeploy**".
-  This package is available at the [NuGet.org](https://www.nuget.org/) online gallery.
-  It can be downloaded or installed directly from there.
-* For more information, see [Installing plugin packages](https://github.com/Rhetos/Rhetos/wiki/Installing-plugin-packages).
+### Building and testing the source code
+
+* Note: This package is already available at the [NuGet.org](https://www.nuget.org/) online gallery.
+  You don't need to build it from source in order to use it in your application.
+* To build the package from source, run `Clean.bat`, `Build.bat` and `Test.bat`.
+* For the test script to work, you need to create an empty database and
+  a settings file `test\TestApp\rhetos-app.local.settings.json`
+  with the database connection string (configuration key "ConnectionStrings:RhetosConnectionString").
+* The build output is a NuGet package in the "Install" subfolder.

@@ -1,5 +1,9 @@
 # AfterDeploy release notes
 
+## 5.0.0 (TO BE RELEASED)
+
+* Migrated from .NET Framework to .NET 5 and Rhetos 5.
+
 ## 1.2.0 (2019-09-09)
 
 ### Internal improvements
