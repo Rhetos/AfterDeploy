@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Rhetos">
-      <Version>5.0.0-dev*</Version>
+      <Version>5.0.0</Version>
     </PackageReference>
   </ItemGroup>
 

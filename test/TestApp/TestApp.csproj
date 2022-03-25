@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rhetos" Version="5.0.0-dev*" />
-    <PackageReference Include="Rhetos.CommonConcepts" Version="5.0.0-dev*" />
-    <PackageReference Include="Rhetos.Host" Version="5.0.0-dev*" />
-    <PackageReference Include="Rhetos.Host.AspNet" Version="5.0.0-dev*" />
-    <PackageReference Include="Rhetos.MSBuild" Version="5.0.0-dev*" />
+    <PackageReference Include="Rhetos" Version="5.0.0" />
+    <PackageReference Include="Rhetos.CommonConcepts" Version="5.0.0" />
+    <PackageReference Include="Rhetos.Host" Version="5.0.0" />
+    <PackageReference Include="Rhetos.Host.AspNet" Version="5.0.0" />
+    <PackageReference Include="Rhetos.MSBuild" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
