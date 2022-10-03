@@ -37,6 +37,10 @@ namespace Rhetos.AfterDeploy
         private readonly AfterDeployScriptsProvider _afterDeployScriptsProvider;
         private readonly FilesUtility _filesUtility;
 
+        private const string AfterDeploySubfolder = "AfterDeploy";
+        private static readonly string AfterDeploySubfolderPrefix = AfterDeploySubfolder + Path.DirectorySeparatorChar;
+        private static readonly string AfterDeploySubfolderPattern = Path.DirectorySeparatorChar + AfterDeploySubfolder + Path.DirectorySeparatorChar;
+
         public AfterDeployGenerator(InstalledPackages installedPackages, ILogProvider logProvider, RhetosBuildEnvironment rhetosBuildEnvironment, FilesUtility filesUtility)
         {
             _installedPackages = installedPackages;
@@ -58,24 +62,46 @@ namespace Rhetos.AfterDeploy
         /// </summary>
         private List<AfterDeployScript> GetScripts(InstalledPackage package)
         {
-            string afterDeployFolderPrefix = "AfterDeploy" + Path.DirectorySeparatorChar;
+            var packageSqlFiles =
+                    (from file in package.ContentFiles
+                     let afterDeploySimplifiedPath = GetScriptSimplifiedPath(file)
+                     where afterDeploySimplifiedPath != null // Use only files in AfterDeploy subfolder.
+                     where CheckFileExtension(file)
+                     orderby CsUtility.GetNaturalSortString(file.InPackagePath).Replace(@"\", @" \").Replace(@"/", @" /")
+                     select new AfterDeployScript
+                     {
+                         Name = package.Id + ": " + afterDeploySimplifiedPath,
+                         Script = _filesUtility.ReadAllText(file.PhysicalPath)
+                     })
+                    .ToList();
 
-            var files = package.ContentFiles.Where(file => file.InPackagePath.StartsWith(afterDeployFolderPrefix, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(file => CsUtility.GetNaturalSortString(file.InPackagePath).Replace(@"\", @" \").Replace(@"/", @" /"))
-                .ToList();
+            return packageSqlFiles;
+        }
 
+        /// <summary>
+        /// If file is located in an AfterDeploy folder, returns the simplified file path, otherwise returns <see langword="null"/>.
+        /// </summary>
+        private string GetScriptSimplifiedPath(ContentFile file)
+        {
+            if (file.InPackagePath.StartsWith(AfterDeploySubfolderPrefix, StringComparison.OrdinalIgnoreCase))
+                return file.InPackagePath[AfterDeploySubfolderPrefix.Length..];
+
+            var startPostion = file.InPackagePath.IndexOf(AfterDeploySubfolderPattern, StringComparison.OrdinalIgnoreCase);
+            if (startPostion != -1)
+                return file.InPackagePath[..startPostion] + file.InPackagePath[(startPostion + AfterDeploySubfolderPattern.Length - 1)..];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Throws an exception if the AfterDeploy file does not have '.sql' extension.
+        /// </summary>
+        private bool CheckFileExtension(ContentFile file)
+        {
             const string expectedExtension = ".sql";
-            var badFile = files.FirstOrDefault(file => !string.Equals(Path.GetExtension(file.InPackagePath), expectedExtension, StringComparison.OrdinalIgnoreCase));
-            if (badFile != null)
-                throw new FrameworkException("After-deploy script '" + badFile.PhysicalPath + "' does not have expected extension '" + expectedExtension + "'.");
-
-            return files
-                .Select(file => new AfterDeployScript
-                {
-                    Name = package.Id + ": " + file.InPackagePath.Substring(afterDeployFolderPrefix.Length),
-                    Script = _filesUtility.ReadAllText(file.PhysicalPath)
-                })
-                .ToList();
+            if (!string.Equals(Path.GetExtension(file.InPackagePath), expectedExtension, StringComparison.OrdinalIgnoreCase))
+                throw new FrameworkException($"After-deploy script '{file.PhysicalPath}' does not have expected extension '{expectedExtension}'.");
+            return true;
         }
     }
 }
