@@ -36,7 +36,7 @@ namespace Rhetos.AfterDeploy
 
         public AfterDeployScriptsProvider(ILogProvider logProvider, IAssetsOptions assetsOptions)
         {
-            _performanceLogger = logProvider.GetLogger("Performance");
+            _performanceLogger = logProvider.GetLogger("Performance.AfterDeploy");
             _afterDeployScriptsFilePath = Path.Combine(assetsOptions.AssetsFolder, AfterDeployScriptsFileName);
         }
 
@@ -51,7 +51,7 @@ namespace Rhetos.AfterDeploy
                 throw new FrameworkException($@"The file {_afterDeployScriptsFilePath} that is used to execute the after deploy scripts is missing. Please check that the build has completed successfully before updating the database.");
             var serializedConcepts = File.ReadAllText(_afterDeployScriptsFilePath, Encoding.UTF8);
             var afterDeployScripts = JsonConvert.DeserializeObject<AfterDeployScripts>(serializedConcepts);
-            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Loaded {afterDeployScripts.Scripts.Count} scripts from generated file.");
+            _performanceLogger.Write(stopwatch, $@"Loaded {afterDeployScripts.Scripts.Count} scripts from generated file.");
             return afterDeployScripts;
         }
 
@@ -60,7 +60,7 @@ namespace Rhetos.AfterDeploy
             var stopwatch = Stopwatch.StartNew();
             string serializedAfterDeployScripts = JsonConvert.SerializeObject(afterDeployScripts, Formatting.Indented);
             File.WriteAllText(_afterDeployScriptsFilePath, serializedAfterDeployScripts, Encoding.UTF8);
-            _performanceLogger.Write(stopwatch, $@"AfterDeployScriptsProvider: Saved {afterDeployScripts.Scripts.Count} scripts to generated file.");
+            _performanceLogger.Write(stopwatch, $@"Saved {afterDeployScripts.Scripts.Count} scripts to generated file.");
         }
     }
 }
