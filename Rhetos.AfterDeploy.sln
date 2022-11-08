@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		Readme.md = Readme.md
 		Rhetos.AfterDeploy.nuspec = Rhetos.AfterDeploy.nuspec
-		Source\Rhetos.AfterDeploy.props = Source\Rhetos.AfterDeploy.props
+		Source\Rhetos.AfterDeploy.targets = Source\Rhetos.AfterDeploy.targets
 		Test.bat = Test.bat
 	EndProjectSection
 EndProject

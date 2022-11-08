@@ -19,6 +19,6 @@
     <file src="ChangeLog.md" target="" />
     <file src="Source\Rhetos.AfterDeploy\bin\Debug\net5.0\Rhetos.AfterDeploy.pdb" target="lib\net5.0" />
     <file src="Source\Rhetos.AfterDeploy\bin\Debug\net5.0\Rhetos.AfterDeploy.dll" target="lib\net5.0" />
-    <file src="Source\Rhetos.AfterDeploy.props" target="build" />
+    <file src="Source\Rhetos.AfterDeploy.targets" target="build" />
   </files>
 </package>

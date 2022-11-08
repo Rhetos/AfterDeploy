@@ -27,6 +27,6 @@
     <ProjectReference Include="..\..\Source\Rhetos.AfterDeploy\Rhetos.AfterDeploy.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\Source\Rhetos.AfterDeploy.props" />
+  <Import Project="..\..\Source\Rhetos.AfterDeploy.targets" />
 
 </Project>

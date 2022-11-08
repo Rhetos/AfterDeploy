@@ -1,0 +1,8 @@
+<Project>
+    <Target Name="ResolveAfterDeployRhetosBuildItems" BeforeTargets="ResolveRhetosBuildItems">
+        <Message Text="ResolveAfterDeployRhetosBuildItems" />
+        <ItemGroup>
+            <RhetosBuild Include="**\AfterDeploy\**\*" />
+        </ItemGroup>
+    </Target>
+</Project>
