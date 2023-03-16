@@ -1,12 +1,17 @@
 # AfterDeploy release notes
 
+## 5.1.0 (2023-03-16)
+
+* More flexible AfterDeploy folder locations, to allow simpler code organization within a project:
+  AfterDeploy folder no longer needs to be in the project root, and a single project can have multiple AfterDeploy folders.
+
 ## 5.0.0 (2022-03-25)
 
 * Migrated from .NET Framework to .NET 5 and Rhetos 5.
 
 ## 1.2.0 (2019-09-09)
 
-### Internal improvements
+Internal improvements:
 
 * Changed default file encoding from ANSI to UTF-8.
 * Bugfix: AfterDeploy scripts are ignored when deploying a package directly from source folder
@@ -14,7 +19,7 @@
 
 ## 1.1.0 (2017-02-13)
 
-## New features
+New features:
 
 * Supports the `GO` command in SQL scripts, and `/*DatabaseGenerator:NoTransaction*/` tag.
 
