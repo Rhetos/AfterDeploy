@@ -11,14 +11,14 @@
     <copyright>Copyright Omega software 2016</copyright>
     <tags>Rhetos plugin</tags>
     <dependencies>
-      <dependency id="Rhetos" version="5.0.0" />
+      <dependency id="Rhetos" version="6.0.0-dev24011711054c6feb" />
     </dependencies>
   </metadata>
   <files>
     <file src="Readme.md" target="" />
     <file src="ChangeLog.md" target="" />
-    <file src="Source\Rhetos.AfterDeploy\bin\Debug\net5.0\Rhetos.AfterDeploy.pdb" target="lib\net5.0" />
-    <file src="Source\Rhetos.AfterDeploy\bin\Debug\net5.0\Rhetos.AfterDeploy.dll" target="lib\net5.0" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\net8.0\Rhetos.AfterDeploy.pdb" target="lib\net8.0" />
+    <file src="Source\Rhetos.AfterDeploy\bin\Debug\net8.0\Rhetos.AfterDeploy.dll" target="lib\net8.0" />
     <file src="Source\Rhetos.AfterDeploy.targets" target="build" />
   </files>
 </package>

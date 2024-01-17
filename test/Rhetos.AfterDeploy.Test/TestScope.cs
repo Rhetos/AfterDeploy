@@ -51,7 +51,7 @@ namespace Rhetos.AfterDeploy.Test
         /// Reusing a single shared static DI container between tests, to reduce initialization time for each test.
         /// Each test should create a child scope with <see cref="Create"/> method to start a 'using' block.
         /// </summary>
-        private static readonly RhetosHost _rhetosHost = RhetosHost.CreateFrom(Path.GetFullPath(@"..\..\..\..\TestApp\bin\Debug\net5.0\TestApp.dll"), ConfigureRhetosHostBuilder);
+        private static readonly RhetosHost _rhetosHost = RhetosHost.CreateFrom(Path.GetFullPath(@"..\..\..\..\TestApp\bin\Debug\net8.0\TestApp.dll"), ConfigureRhetosHostBuilder);
 
         private static void ConfigureRhetosHostBuilder(IRhetosHostBuilder rhetosHostBuilder)
         {
