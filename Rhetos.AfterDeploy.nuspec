@@ -5,13 +5,15 @@
     <version>6.0.0-dev</version>
     <authors>Omega software</authors>
     <owners>Omega software</owners>
-    <licenseUrl>http://opensource.org/licenses/AGPL-3.0</licenseUrl>
+    <license type="expression">AGPL-3.0-only</license>
     <projectUrl>https://github.com/rhetos/rhetos</projectUrl>
     <description>Rhetos.AfterDeploy is a plugin for Rhetos development platform. It simplifies the handling of SQL scripts that need to be executed on each deployment.</description>
     <copyright>Copyright Omega software 2016</copyright>
     <tags>Rhetos plugin</tags>
     <dependencies>
-      <dependency id="Rhetos" version="6.0.0-dev24011711054c6feb" />
+      <group targetFramework="net8.0">
+        <dependency id="Rhetos" version="6.0.0-dev24011711054c6feb" />
+      </group>
     </dependencies>
   </metadata>
   <files>
