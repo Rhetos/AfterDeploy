@@ -1,5 +1,9 @@
 # AfterDeploy release notes
 
+## 6.0.0 (2025-09-03)
+
+* Update to .NET 8 and Rhetos 6.
+
 ## 5.1.0 (2023-03-16)
 
 * More flexible AfterDeploy folder locations, to allow simpler code organization within a project:
